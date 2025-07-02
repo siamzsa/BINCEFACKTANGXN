@@ -1,0 +1,94 @@
+(function() {
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'balanceOverlay';
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.right = 0;
+  overlay.style.bottom = 0;
+  overlay.style.background = 'rgba(0,0,0,0.6)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = 999999;
+
+  // Modal box
+  const modal = document.createElement('div');
+  modal.style.background = '#121212';
+  modal.style.padding = '30px';
+  modal.style.borderRadius = '16px';
+  modal.style.width = '340px';
+  modal.style.boxShadow = '0 0 25px rgba(0, 0, 0, 0.5)';
+  modal.style.color = '#fff';
+  modal.style.fontFamily = 'Arial, sans-serif';
+  modal.style.display = 'flex';
+  modal.style.flexDirection = 'column';
+  modal.style.gap = '20px';
+
+  // Title
+  const title = document.createElement('h2');
+  title.innerText = 'Enter Balances';
+  title.style.textAlign = 'center';
+  title.style.fontSize = '22px';
+  title.style.color = '#00ffe7';
+
+  // Create input
+  function createInput(ph) {
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.placeholder = ph;
+    input.step = '0.000001';
+    input.min = '0';
+    input.style.padding = '12px 16px';
+    input.style.borderRadius = '10px';
+    input.style.border = '1px solid #333';
+    input.style.background = '#1e1e1e';
+    input.style.color = '#eee';
+    input.style.fontSize = '16px';
+    input.style.outline = 'none';
+    input.onfocus = () => input.style.borderColor = '#00ffe7';
+    input.onblur = () => input.style.borderColor = '#333';
+    return input;
+  }
+
+  const usdtInput = createInput('USDT');
+  const usdInput = createInput('USD');
+  const pnlInput = createInput("Today's PnL");
+
+  // Button
+  const button = document.createElement('button');
+  button.innerText = 'Apply';
+  button.style.padding = '14px';
+  button.style.fontSize = '17px';
+  button.style.background = '#00b894';
+  button.style.border = 'none';
+  button.style.borderRadius = '10px';
+  button.style.color = 'white';
+  button.style.cursor = 'pointer';
+  button.style.fontWeight = '600';
+  button.onmouseenter = () => button.style.background = '#019874';
+  button.onmouseleave = () => button.style.background = '#00b894';
+
+  // Append all
+  modal.appendChild(title);
+  modal.appendChild(usdtInput);
+  modal.appendChild(usdInput);
+  modal.appendChild(pnlInput);
+  modal.appendChild(button);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Save values to global for next use
+  button.onclick = () => {
+    const usdt = parseFloat(usdtInput.value);
+    const usd = parseFloat(usdInput.value);
+    const pnl = parseFloat(pnlInput.value);
+    if (!isNaN(usdt) && !isNaN(usd) && !isNaN(pnl)) {
+      window.fakeBalanceValues = { usdt, usd, pnl };
+      document.body.removeChild(overlay);
+    } else {
+      alert('Please fill all values correctly.');
+    }
+  };
+})();
